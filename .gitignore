@@ -1,0 +1,11 @@
+# Dist folder
+dist/
+
+# node_modules
+node_modules
+
+#DS_Store
+.DS_Store
+
+#Package-lock.json
+package-lock.json
