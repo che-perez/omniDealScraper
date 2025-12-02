@@ -1,35 +1,27 @@
 {
   "name": "omnidealscraper",
   "version": "1.0.0",
-  "description": "This project was bootstrapped with Fastify-CLI.",
-  "main": "app.ts",
-  "directories": {
-    "test": "test"
+  "description": "Server for scraping data from websites using cheerio and fastify",
+  "homepage": "https://github.com/che-perez/omniDealScraper#readme",
+  "bugs": {
+    "url": "https://github.com/che-perez/omniDealScraper/issues"
   },
-  "scripts": {
-    "test": "npm run build:ts && tsc -p test/tsconfig.json && c8 node --test -r ts-node/register \"test/**/*.ts\"",
-    "start": "npm run build:ts && fastify start -l info dist/app.js",
-    "build:ts": "tsc",
-    "watch:ts": "tsc -w",
-    "dev": "npm run build:ts && concurrently -k -p \"[{name}]\" -n \"TypeScript,App\" -c \"yellow.bold,cyan.bold\" \"npm:watch:ts\" \"npm:dev:start\"",
-    "dev:start": "fastify start --ignore-watch=.ts$ -w -l info -P dist/app.js"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/che-perez/omniDealScraper.git"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
-  "dependencies": {
-    "fastify": "^5.0.0",
-    "fastify-plugin": "^5.0.0",
-    "@fastify/autoload": "^6.0.0",
-    "@fastify/sensible": "^6.0.0",
-    "fastify-cli": "^7.4.1"
+  "author": "Josue Perez",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "@types/node": "^24.0.8",
-    "c8": "^10.1.2",
-    "ts-node": "^10.4.0",
-    "concurrently": "^9.0.0",
-    "fastify-tsconfig": "^3.0.0",
-    "typescript": "~5.9.2"
+  "dependencies": {
+    "@types/node": "^24.10.1",
+    "cheerio": "^1.1.2",
+    "fastify": "^5.6.2",
+    "puppeteer": "^24.31.0",
+    "typescript": "^5.9.3"
   }
 }
