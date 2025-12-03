@@ -1,5 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
-import buildServer from "../server/index";
+import buildServer from "../server/";
 
 const app = buildServer();
 
