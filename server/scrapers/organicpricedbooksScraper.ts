@@ -4,8 +4,8 @@
  */
 
 import * as cheerio from "cheerio";
-import type { ScrapedItem } from "../schema/schema";
-import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils";
+import type { ScrapedItem } from "../schema/schema.ts";
+import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils.ts";
 
 const SOURCE: "organicpricedbooks" = "organicpricedbooks";
 const BASE_URL = "https://www.panelboundcomics.com";

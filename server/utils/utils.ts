@@ -1,4 +1,4 @@
-import type { ScrapedItem, Product, PriceSource, SourceSite } from "../schema/schema";
+import type { ScrapedItem, Product, PriceSource, SourceSite } from "../schema/schema.ts";
 
 // Normalize title for deduplication
 export function normalizeTitle(title: string): string {

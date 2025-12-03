@@ -2,7 +2,7 @@ import Fastify, { type FastifyInstance, type RouteShorthandOptions } from "fasti
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { MongoClient, Collection } from 'mongodb';
 
-import { storage } from "./storage";
+import { storage } from "./storage.ts";
 
 // MongoDB Connection String
 const MONGODB_URI = process.env.MONGODB_URI;
