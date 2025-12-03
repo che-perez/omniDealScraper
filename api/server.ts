@@ -9,5 +9,5 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     await app.ready();
 
     // Forward the request to Fastify
-    app.server.emit('reques', req, res);
+    app.server.emit('request', req, res);
 };
