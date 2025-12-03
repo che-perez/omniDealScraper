@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "buildCommand": "npm install -g typescript && npm run build",
+    "buildCommand": "npm install && npm run build",
     "builds": [
         {
             "src": "dist/index.js",
