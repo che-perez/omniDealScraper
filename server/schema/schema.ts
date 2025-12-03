@@ -22,6 +22,7 @@ export interface Product {
   prices: PriceSource[];
   bestPrice: PriceSource;
   maxDiscount: number;
+  lastUpdated: Date
 }
 
 // Raw scraped item from a single source

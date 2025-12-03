@@ -1,4 +1,4 @@
-import type { ScrapedItem, Product, PriceSource, SourceSite } from "../schema/schema.ts";
+import type { ScrapedItem, Product, PriceSource, SourceSite } from "../schema/schema";
 
 // Normalize title for deduplication
 export function normalizeTitle(title: string): string {
@@ -25,7 +25,7 @@ export function parsePrice(priceStr: string): number {
 }
 
 // Merge scraped items into products with multiple price sources
-export function mergeProducts(items: ScrapedItem[]): Product[] {
+export function mergeProducts(items: ScrapedItem[]): [Product[], Set<string>] {
   const productMap = new Map<string, { item: ScrapedItem; prices: PriceSource[] }>();
 
   for (const item of items) {
@@ -61,6 +61,7 @@ export function mergeProducts(items: ScrapedItem[]): Product[] {
 
   // Convert to Product array
   const products: Product[] = [];
+  const currentItemIds: Set<string> = new Set();
   let id = 1;
 
   const entries = Array.from(productMap.entries());
@@ -81,13 +82,16 @@ export function mergeProducts(items: ScrapedItem[]): Product[] {
       prices: data.prices,
       bestPrice,
       maxDiscount,
+      lastUpdated: new Date()
     });
+
+    currentItemIds.add(normalizedTitle);
   }
 
   // Sort by max discount (highest first)
   products.sort((a, b) => b.maxDiscount - a.maxDiscount);
 
-  return products;
+  return [products, currentItemIds];
 }
 
 // Get site display name

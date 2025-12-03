@@ -1,11 +1,15 @@
-import type { ScrapedItem, Product, ScrapeStatus, SourceSite } from "../schema/schema.ts";
-import { scrapeInStockTrades } from "./instockTradeScraper.ts";
-import { scrapeCheapGraphicNovels } from "./cheapgraphicnovel.ts";
-import { scrapeOrganicPriceBooks } from "./organicpricedbooksScraper.ts";
-import { mergeProducts, getSiteName } from "../utils/utils.ts";
+import type { ScrapedItem, Product, ScrapeStatus, SourceSite } from "../schema/schema";
+import { scrapeInStockTrades } from "./instockTradeScraper";
+import { scrapeCheapGraphicNovels } from "./cheapgraphicnovel";
+import { scrapeOrganicPriceBooks } from "./organicpricedbooksScraper";
+import { mergeProducts, getSiteName } from "../utils/utils";
+
+// Import MongoDB
+import { Collection } from 'mongodb';
 
 // In-memory cache for scraped products
 let cachedProducts: Product[] = [];
+let itemsId: Set<string>;
 let scrapeStatus: ScrapeStatus = {
   lastScraped: null,
   isScaping: false,
@@ -13,8 +17,10 @@ let scrapeStatus: ScrapeStatus = {
   sourceStats: [],
 };
 
+
+
 // Scrape all sources and merge products
-export async function scrapeAllSources(): Promise<Product[]> {
+export async function scrapeAllSources(productsCollection: Collection): Promise<Product[]> {
   if (scrapeStatus.isScaping) {
     console.log("Scrape already in progress, returning cached data");
     return cachedProducts;
@@ -75,7 +81,7 @@ export async function scrapeAllSources(): Promise<Product[]> {
     console.log(`Total items scraped: ${allItems.length}`);
 
     // Merge products to dedupe by title
-    cachedProducts = mergeProducts(allItems);
+    [cachedProducts, itemsId] = mergeProducts(allItems);
 
     console.log(`Merged into ${cachedProducts.length} unique products`);
 
@@ -86,6 +92,49 @@ export async function scrapeAllSources(): Promise<Product[]> {
       totalProducts: cachedProducts.length,
       sourceStats,
     };
+
+    // Get existing product identifiers from the database
+    const existingProductsInDb = await productsCollection.find({}, { projection: { normalizedTitle: 1 } }).toArray();
+    const existingDbProductIds: Set<string> = new Set(existingProductsInDb.map(p => p.normalizedTitle));
+
+    // Identify new products to add
+    const productsToAdd = cachedProducts.filter(p => !existingDbProductIds.has(p.normalizedTitle));
+
+    // Identify products to remove (no longer present on the scraped page)
+    const productsToRemoveIdentifiers = Array.from(existingDbProductIds).filter(id => !itemsId.has(id));
+    
+    // Perform Database Operations - Add or Remove Products from DB
+    if (productsToRemoveIdentifiers.length > 0) {
+        const deleteResult = await productsCollection.deleteMany({ identifier: { $in: productsToRemoveIdentifiers } });
+        console.log(`Removed ${deleteResult.deletedCount} products no longer found on the website.`);
+    } else {
+        console.log('No products to remove.');
+    }
+
+    if (productsToAdd.length > 0) {
+        const insertResult = await productsCollection.insertMany(productsToAdd);
+        console.log(`Added ${insertResult.insertedCount} new products.`);
+    } else {
+        console.log('No new products to add.');
+    }
+
+    // Update existing product, e.g., price.
+    for (const product of cachedProducts) {
+        if (existingDbProductIds.has(product.normalizedTitle)) {
+            await productsCollection.updateOne(
+                { identifier: product.normalizedTitle },
+                { $set: { id: product.id,
+                          title: product.title,
+                          normalizedTitle: product.normalizedTitle,
+                          imageUrl: product.imageUrl,
+                          category: product.category,
+                          prices: product.prices,
+                          bestPrice: product.bestPrice,
+                          maxDiscount: product.maxDiscount,
+                          lastUpdated: now } }
+            );
+        }
+    }
 
     return cachedProducts;
   } catch (err) {

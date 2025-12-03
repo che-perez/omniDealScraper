@@ -1,9 +1,11 @@
-import { type Product, type ScrapeStatus } from "./schema/schema.ts";
-import { scrapeAllSources, getCachedProducts, getScrapeStatus } from "./scrapers/index.ts";
+import { type Product, type ScrapeStatus } from "./schema/schema";
+import { scrapeAllSources, getCachedProducts, getScrapeStatus } from "./scrapers/index";
+
+import { Collection } from "mongodb";
 
 export interface IStorage {
   getProducts(): Promise<Product[]>;
-  scrapeProducts(): Promise<Product[]>;
+  scrapeProducts(productsCollection: Collection): Promise<Product[]>;
   getStatus(): ScrapeStatus;
 }
 
@@ -13,8 +15,8 @@ export class MemStorage implements IStorage {
     return getCachedProducts();
   }
 
-  async scrapeProducts(): Promise<Product[]> {
-    return scrapeAllSources();
+  async scrapeProducts(productsCollection: Collection): Promise<Product[]> {
+    return scrapeAllSources(productsCollection);
   }
 
   getStatus(): ScrapeStatus {

@@ -4,8 +4,8 @@
  */
 
 import * as cheerio from "cheerio";
-import type { ScrapedItem } from "../schema/schema.ts";
-import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils.ts";
+import type { ScrapedItem } from "../schema/schema";
+import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils";
 
 const SOURCE: "instocktrades" = "instocktrades";
 const BASE_URL = "https://www.instocktrades.com";
@@ -148,6 +148,7 @@ export async function scrapeInStockTrades(): Promise<ScrapedItem[]> {
     // { url: `${BASE_URL}/clearance`, name: "Clearance" },
     // { url: `${BASE_URL}/damages`, name: "Damages" },
     { url: `${BASE_URL}/specials/500/2025-red-tag-sale`, name: "Red Tag Sale" },
+    { url: `${BASE_URL}/specials/616/end-of-year-blowout-hcs-and-tps`, name: "End of Year Blowout"},
   ];
 
   for (const category of categories) {

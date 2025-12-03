@@ -4,8 +4,8 @@
  */
 
 import * as cheerio from "cheerio";
-import type { ScrapedItem } from "../schema/schema.ts";
-import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils.ts";
+import type { ScrapedItem } from "../schema/schema";
+import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils";
 
 const SOURCE: "organicpricedbooks" = "organicpricedbooks";
 const BASE_URL = "https://www.panelboundcomics.com";
@@ -44,7 +44,6 @@ async function scrapeCategoryPage(url: string, category: string): Promise<[Scrap
     //Grab max page number
     const pageEl = $(".pagination__item.link");
     maxPage = pageEl.eq(-2).text();
-    console.log("pages", maxPage);
 
     // Try multiple selectors for products
     const productSelectors = [
