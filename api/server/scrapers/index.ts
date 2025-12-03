@@ -1,8 +1,8 @@
-import type { ScrapedItem, Product, ScrapeStatus, SourceSite } from "../schema/schema.ts";
-import { scrapeInStockTrades } from "./instockTradeScraper.ts";
-import { scrapeCheapGraphicNovels } from "./cheapgraphicnovel.ts";
-import { scrapeOrganicPriceBooks } from "./organicpricedbooksScraper.ts";
-import { mergeProducts, getSiteName } from "../utils/utils.ts";
+import type { ScrapedItem, Product, ScrapeStatus, SourceSite } from "../schema/schema";
+import { scrapeInStockTrades } from "./instockTradeScraper";
+import { scrapeCheapGraphicNovels } from "./cheapgraphicnovel";
+import { scrapeOrganicPriceBooks } from "./organicpricedbooksScraper";
+import { mergeProducts, getSiteName } from "../utils/utils";
 
 // Import MongoDB
 import { Collection } from 'mongodb';

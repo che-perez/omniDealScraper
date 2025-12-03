@@ -1,21 +1,14 @@
 {
-  "include": ["api/**/*.ts", "server/**/*.ts"],
-  "exclude": ["node_modules", "build", "dist", "**/*.test.ts"],
   "compilerOptions": {
-    "target": "ESNext",
-    "incremental": true,
-    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
-    "noEmit": true,
-    "module": "NodeNext",
+    "target": "ES2020", // Or your desired ECMAScript target
+    "module": "commonjs", // Or your desired module system (e.g., "esnext")
+    "outDir": "./dist", // Output directory for compiled JavaScript
+    "rootDir": "./api", // Root directory of your TypeScript source files
     "strict": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "jsx": "preserve",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "allowImportingTsExtensions": true,
-    "moduleResolution": "NodeNext",
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "types": ["node"]
-  }
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./api/**/*.ts"], // Specify which files to include for compilation
+  "exclude": ["node_modules"] // Exclude node_modules from compilation
 }

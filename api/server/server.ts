@@ -1,11 +1,14 @@
 import Fastify, { type FastifyInstance, type RouteShorthandOptions } from "fastify";
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { MongoClient, Collection } from 'mongodb';
+import * as dotenv from "dotenv";
+dotenv.config();
 
-import { storage } from "./storage.ts";
+import { storage } from "./storage";
+import './schema/env.ts';
 
 // MongoDB Connection String
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI: string = process.env.MONGODB_URI!;
 const DB_NAME = "OmniDeal";
 const COLLECTION_NAME = "scrapeData";
 

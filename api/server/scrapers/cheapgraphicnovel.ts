@@ -6,8 +6,8 @@
 
 import puppeteer from "puppeteer";
 import * as cheerio from "cheerio";
-import type { ScrapedItem } from "../schema/schema.ts";
-import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils.ts";
+import type { ScrapedItem } from "../schema/schema";
+import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils";
 
 const SOURCE: "cheapgraphicnovels" = "cheapgraphicnovels";
 const BASE_URL = "https://cheapgraphicnovels.com";
@@ -74,7 +74,7 @@ async function getSubcategoryLinks(): Promise<string[]> {
  */
 async function scrapeCategoryWithPagination(startUrl: string): Promise<ScrapedItem[]> {
   const allItems: ScrapedItem[] = [];
-  let browser: puppeteer.Browser | null = null;
+  let browser = null;
 
   try {
     // Launch browser
