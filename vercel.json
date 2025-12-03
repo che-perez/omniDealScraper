@@ -1,6 +1,6 @@
 {
     "version": 2,
-    "buildCommand": "npx tsc",
+    "buildCommand": "npm install -g typescript && npm run build",
     "builds": [
         {
             "src": "dist/index.js",
