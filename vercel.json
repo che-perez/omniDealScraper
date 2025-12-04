@@ -9,20 +9,20 @@
     ],
     "routes": [
         {
-            "src": "/api/(.*)",
-            "dest": "dis/index.js"
+            "src": "/(.*)",
+            "dest": "dist/server.js"
         },
         {
             "src": "/products",
-            "dest": "dist/index.js"
+            "dest": "dist/server.js"
         },
         {
             "src": "/scrape",
-            "dest": "dist/index.js"
+            "dest": "dist/server.js"
         },
         {
             "src": "/status",
-            "dest": "dist/index.js"
+            "dest": "dist/server.js"
         }
     ]
 }
