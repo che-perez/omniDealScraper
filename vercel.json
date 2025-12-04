@@ -11,18 +11,6 @@
         {
             "src": "/(.*)",
             "dest": "dist/server.js"
-        },
-        {
-            "src": "/products",
-            "dest": "dist/server.js"
-        },
-        {
-            "src": "/scrape",
-            "dest": "dist/server.js"
-        },
-        {
-            "src": "/status",
-            "dest": "dist/server.js"
         }
     ]
 }

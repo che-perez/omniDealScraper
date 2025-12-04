@@ -25,7 +25,7 @@ export async function connectToMongoDB() {
     } catch (error) {
         console.error('Failed to connect to MongoDB:', error);
         // Exit process or handle error appropriately if DB connection is critical
-        process.exit(1);
+        throw error;
     }
 }
 
@@ -43,11 +43,15 @@ export async function connectToMongoDB() {
     server.get("/products", async (request, reply) => {
         try {
 
+            if(!productsCollection) {
+                reply.code(500).send({ error: "Database not connected"});
+            }
+
             const products = await productsCollection.find({}).toArray();
 
             const status = storage.getStatus();
 
-            reply.code(201).header('Content-Type', 'application/json');
+            reply.code(200).header('Content-Type', 'application/json');
 
             return reply.send({ products, status });
 
@@ -55,7 +59,7 @@ export async function connectToMongoDB() {
             console.error("Error getting products:", err);
             reply.code(500).send({ error: "Failed to get products" });
         }
-    }),
+    });
 
     server.post("/scrape", async (request, reply) => {
         try {
@@ -72,7 +76,7 @@ export async function connectToMongoDB() {
         } catch (err) {
             console.error("Error scraping:", err);
         }
-    }),
+    });
 
     server.get("/status", async (request, reply) => {
         try {
@@ -83,41 +87,8 @@ export async function connectToMongoDB() {
             console.error("Error getting status", err);
             reply.code(500).send({ error: "Failed to get status" });
         }
-    })
+    });
 
+    await connectToMongoDB();
 
-const start = async () => {
-    await connectToMongoDB(); // Connect to MongoDB before starting the server
-
-    try {
-        await server.listen({ port: 3005, host: "0.0.0.0" });
-
-        const address = server.server.address();
-        const port = typeof address === "string" ? address : address?.port;
-
-        console.log("Listening on port:", port);
-
-    } catch (err) {
-        server.log.error(err)
-        process.exit(1)
-    }
-}
-
-start()
-
-// --- Graceful Shutdown ---
-// Ensure the MongoDB connection is closed when the server shuts down.
-process.on('SIGINT', async () => {
-    server.log.info('Shutting down server...');
-    await server.close();
-    if (mongoClient) {
-        await mongoClient.close();
-        server.log.info('MongoDB connection closed.');
-    }
-    process.exit(0);
-});
-
-// // Handle unhandled promise rejections
-// process.on('unhandledRejection', (err) => {
-//     server.log.error('Unhandled Rejection:', err);
-// });
+    export default server;
