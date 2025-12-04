@@ -33,6 +33,13 @@ export async function connectToMongoDB() {
     logger: true
     });
 
+    server.get('/', async (request, reply) => {
+        const msg = { OMNI_DEALS: 'Scraper API' };
+
+        return reply.send(msg);
+    })
+
+
     server.get("/products", async (request, reply) => {
         try {
 
@@ -40,7 +47,9 @@ export async function connectToMongoDB() {
 
             const status = storage.getStatus();
 
-            reply.send({ products, status });
+            reply.code(201).header('Content-Type', 'application/json');
+
+            return reply.send({ products, status });
 
         } catch(err) {
             console.error("Error getting products:", err);
