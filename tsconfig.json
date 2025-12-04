@@ -1,14 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES2020", // Or your desired ECMAScript target
-    "module": "commonjs", // Or your desired module system (e.g., "esnext")
-    "outDir": "./dist", // Output directory for compiled JavaScript
-    "rootDir": "./api", // Root directory of your TypeScript source files
+    "target": "esnext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "tsBuildInfoFile": "./node_modules/typescript/tsbuildinfo",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./api"
   },
-  "include": ["./api/**/*.ts"], // Specify which files to include for compilation
-  "exclude": ["node_modules"] // Exclude node_modules from compilation
+  "include": ["api/**/*.ts"],
+  "exclude": ["node_modules"],
+
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": false
+  }
 }

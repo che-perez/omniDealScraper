@@ -4,7 +4,7 @@
  */
 
 import * as cheerio from "cheerio";
-import type { ScrapedItem } from "../schema/schema";
+import type { ScrapedItem } from "../schema/schema.ts";
 import { parsePrice, calculateDiscount, getSiteName } from "../utils/utils";
 
 const SOURCE: "organicpricedbooks" = "organicpricedbooks";

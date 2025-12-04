@@ -4,7 +4,7 @@ const envSchema = z.object({
     MONGODB_URI: z.string()
 });
 
-envSchema.parse(process.env);
+export const env = envSchema.parse(process.env);
 
 declare global {
     namespace NodeJs {

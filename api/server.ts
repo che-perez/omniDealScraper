@@ -1,12 +1,14 @@
 import Fastify, { type FastifyInstance, type RouteShorthandOptions } from "fastify";
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { MongoClient, Collection } from 'mongodb';
+import * as dotenv from "dotenv";
+dotenv.config();
 
-import { storage } from "./storage";
-import './schema/env.ts';
+import { storage } from "./server/storage";
+import { env } from './server/schema/env';
 
 // MongoDB Connection String
-const MONGODB_URI: string = process.env.MONGODB_URI!;
+const MONGODB_URI = env.MONGODB_URI;
 const DB_NAME = "OmniDeal";
 const COLLECTION_NAME = "scrapeData";
 
@@ -27,8 +29,6 @@ export async function connectToMongoDB() {
         process.exit(1);
     }
 }
-
-export default function buildServer() {
 
     const server: FastifyInstance = Fastify({
     logger: true
@@ -77,51 +77,37 @@ export default function buildServer() {
         }
     })
 
-    server.addHook('onReady', async () => {
-        await connectToMongoDB();
-    });
 
-    server.addHook('onClose', async () => {
-        if(mongoClient) {
-            await mongoClient.close();
-            console.log("MongoDB connection clossed.");
-        }
-    });
+const start = async () => {
+    await connectToMongoDB(); // Connect to MongoDB before starting the server
 
-    return server;
+    try {
+        await server.listen({ port: 3005, host: "0.0.0.0" });
+
+        const address = server.server.address();
+        const port = typeof address === "string" ? address : address?.port;
+
+        console.log("Listening on port:", port);
+
+    } catch (err) {
+        server.log.error(err)
+        process.exit(1)
+    }
 }
 
+start()
 
-// const start = async () => {
-//     await connectToMongoDB(); // Connect to MongoDB before starting the server
-
-//     try {
-//         await server.listen({ port: 3005, host: "0.0.0.0" });
-
-//         const address = server.server.address();
-//         const port = typeof address === "string" ? address : address?.port;
-
-//         console.log("Listening on port:", port);
-
-//     } catch (err) {
-//         server.log.error(err)
-//         process.exit(1)
-//     }
-// }
-
-// start()
-
-// // --- Graceful Shutdown ---
-// // Ensure the MongoDB connection is closed when the server shuts down.
-// process.on('SIGINT', async () => {
-//     server.log.info('Shutting down server...');
-//     await server.close();
-//     if (mongoClient) {
-//         await mongoClient.close();
-//         server.log.info('MongoDB connection closed.');
-//     }
-//     process.exit(0);
-// });
+// --- Graceful Shutdown ---
+// Ensure the MongoDB connection is closed when the server shuts down.
+process.on('SIGINT', async () => {
+    server.log.info('Shutting down server...');
+    await server.close();
+    if (mongoClient) {
+        await mongoClient.close();
+        server.log.info('MongoDB connection closed.');
+    }
+    process.exit(0);
+});
 
 // // Handle unhandled promise rejections
 // process.on('unhandledRejection', (err) => {
