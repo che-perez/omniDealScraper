@@ -3,7 +3,7 @@
     "buildCommand": "npm install && npm run build",
     "builds": [
         {
-            "src": "dist/index.js",
+            "src": "server.js",
             "use": "@vercel/node"
         }
     ],
