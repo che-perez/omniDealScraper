@@ -1,8 +1,7 @@
 import Fastify, { type FastifyInstance, type RouteShorthandOptions } from "fastify";
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { MongoClient, Collection } from 'mongodb';
-import * as dotenv from "dotenv";
-dotenv.config();
+import '@dotenvx/dotenvx/config'
 
 import { storage } from "./server/storage";
 import { env } from './server/schema/env';
